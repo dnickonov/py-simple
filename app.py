@@ -3,12 +3,13 @@ from redis import Redis, RedisError
 import os
 import socket
 import pickledb
+import requests
 
 # Connect to Redis
-redis = Redis(host="redis", port=6379,
+redis = Redis(host="127.0.0.1", port=6379,
               db=0, socket_connect_timeout=2, socket_timeout=2)
 # ...or a local (file-based) Pickle DB
-pickle_db = pickledb.load('/data/pysimple.db', True)
+pickle_db = pickledb.load('./data/pysimples.db', True)
 
 COUNTER_FIELD = 'counter'
 
@@ -50,6 +51,24 @@ def hello():
     return html.format(name=os.getenv("NAME", "world"),
                        hostname=socket.gethostname(), visits=visits)
 
+@app.route("/parse")
+def parse():
+    url = 'https://www.google.com'
+
+    #headers = { 'User-Agent' :'Mozilla/5.0' }
+    #req = Request(url, headers=headers)
+    pages = requests.get(url)
+    content = pages.text
+    #content = urlopen(req).read()
+    html = "Contents: {content} \n"
+    return html.format(content=content)
+
+@app.route("/bye")
+def bye():
+    html = "<h3>Bye {name}!</h3>\n" \
+           "Hostname: {hostname} <br/>\n"
+    return html.format(name=os.getenv("NAME", "world"),
+                       hostname=socket.gethostname())
 
 if __name__ == "__main__":
 

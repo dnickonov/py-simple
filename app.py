@@ -6,6 +6,7 @@ import pickledb
 import requests
 
 # Connect to Redis
+#
 redis = Redis(host="127.0.0.1", port=6379,
               db=0, socket_connect_timeout=2, socket_timeout=2)
 # ...or a local (file-based) Pickle DB
